@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To My Love</title>
+    <link rel="stylesheet" href="style.css"> 
+</head>
+<body>
+    <div id="container-wrapper">
+        <div id="game-area">
+            <div id="love-title">To My Love</div>
+            <div id="subtitle">Navigate the path to my heart</div>
+            <div id="maze"></div>
+            
+            <div id="player">
+                <svg width="40" height="40" viewBox="0 0 100 100" class="chibi-character-svg">
+                    <rect x="25" y="40" width="50" height="50" rx="20" ry="20" fill="#FFE5F0"/>
+                    <circle cx="50" cy="35" r="25" fill="#FFE5F0"/>
+                    <circle cx="35" cy="40" r="7" fill="#FFC0CB" opacity="0.8"/>
+                    <circle cx="65" cy="40" r="7" fill="#FFC0CB" opacity="0.8"/>
+                    <circle cx="42" cy="32" r="5" fill="#333"/>
+                    <circle cx="58" cy="32" r="5" fill="#333"/>
+                    <path d="M40 48 Q50 55 60 48" stroke="#333" stroke-width="2" fill="none" stroke-linecap="round"/>
+                    <rect x="68" y="45" width="10" height="30" rx="5" ry="5" fill="#FFE5F0"/>
+                    <rect x="22" y="45" width="10" height="30" rx="5" ry="5" fill="#FFE5F0"/>
+                    <rect x="55" y="85" width="15" height="15" rx="7" ry="7" fill="#F0F8FF"/>
+                    <rect x="30" y="85" width="15" height="15" rx="7" ry="7" fill="#F0F8FF"/>
+                    <path d="M50,60 C48,58 45,58 43,60 C41,62 42,65 44,67 C46,69 48,68 50,67 C52,68 54,69 56,67 C58,65 59,62 57,60 C55,58 52,58 50,60 Z" fill="#E84393"/>
+                </svg>
+            </div>
+
+            <div id="goal">
+                <svg width="40" height="40" viewBox="0 0 100 100" class="love-letter-svg">
+                    <polygon points="5,30 95,30 95,75 5,75" fill="#f8b4d8" stroke="#e84393" stroke-width="4"/>
+                    <polygon points="5,30 50,70 95,30" fill="#f8b4d8" stroke="#e84393" stroke-width="4"/>
+                    <path d="M50,60 C40,40 20,50 20,70 C20,80 30,90 50,90 C70,90 80,80 80,70 C80,50 60,40 50,60 Z" 
+                          fill="#e84393" stroke="#d1237e" stroke-width="3"/>
+                </svg>
+            </div>
+
+            <div id="message"></div>
+            <button id="restart">Play Again</button>
+        </div>
+        
+        <div id="control-panel">
+            <div id="joystick-container">
+                <div id="heart-base">
+                    <svg width="100" height="100" viewBox="0 0 100 100">
+                        <path id="base-heart" d="M50,90 
+                                             C50,90 0,50 0,25 
+                                             C0,10 10,0 25,0 
+                                             C35,0 45,10 50,20 
+                                             C55,10 65,0 75,0 
+                                             C90,0 100,10 100,25 
+                                             C100,50 50,90 50,90 Z" />
+                    </svg>
+                </div>
+                <div id="joystick-handle">
+                    <svg width="50" height="50" viewBox="0 0 100 100">
+                        <path id="handle-heart" d="M50,90 
+                                             C50,90 0,50 0,25 
+                                             C0,10 10,0 25,0 
+                                             C35,0 45,10 50,20 
+                                             C55,10 65,0 75,0 
+                                             C90,0 100,10 100,25 
+                                             C100,50 50,90 50,90 Z" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script> 
+</body>
+</html>

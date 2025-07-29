@@ -1,0 +1,374 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@300;600&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f8a5c2 0%, #fad0c4 30%, #ff9a9e 100%);
+    font-family: 'Montserrat', sans-serif;
+    touch-action: none;
+}
+
+#container-wrapper {
+    position: relative;
+    width: 1160px;
+    height: 600px; /* Will be adjusted by JS based on GRID_HEIGHT */
+    display: flex;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(12px);
+    border-radius: 24px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+}
+
+#game-area {
+    width: 1000px; /* 20 cells * 50px/cell */
+    height: 600px; /* Will be adjusted by JS based on GRID_HEIGHT */
+    position: relative;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+#control-panel {
+    width: 160px;
+    height: 600px; /* Will be adjusted by JS based on GRID_HEIGHT */
+    background: rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(10px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#love-title {
+    position: absolute;
+    top: 40px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    color: white;
+    font-size: 42px;
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    z-index: 5;
+    text-shadow: 0 3px 10px rgba(0, 0, 0, 0.5);
+    pointer-events: none;
+}
+
+#subtitle {
+    position: absolute;
+    top: 90px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.95);
+    font-size: 20px;
+    font-weight: 400;
+    font-style: italic;
+    z-index: 5;
+    pointer-events: none;
+}
+
+#maze {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.wall {
+    position: absolute;
+    background: linear-gradient(135deg, #ff7676, #d63031);
+    border: 1px solid #e17055;
+    box-shadow: 0 2px 8px rgba(220, 70, 70, 0.3);
+    border-radius: 6px;
+}
+
+#player {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    background: radial-gradient(circle at 30% 30%, #ffffff, #fce4ec);
+    border-radius: 50%;
+    transform: translate(-50%, -50%); /* Centers the player relative to its left/top */
+    z-index: 3;
+    box-shadow: 0 6px 20px rgba(255, 105, 180, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+#player::before {
+    content: '';
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: white;
+    border-radius: 50%;
+    top: 7px;
+    left: 7px;
+    box-shadow: 8px 0 0 white, 0 8px 0 white, 8px 8px 0 white;
+}
+
+#goal {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle at center, #ff6b6b, #ee5a52);
+    border-radius: 50%;
+    transform: translate(-50%, -50%); /* Centers the goal relative to its left/top */
+    z-index: 2;
+    animation: heartbeat 1.5s infinite alternate;
+    box-shadow: 0 0 30px rgba(255, 105, 180, 0.9);
+}
+
+@keyframes heartbeat {
+    0% { 
+        transform: translate(-50%, -50%) scale(1);
+        box-shadow: 0 0 30px rgba(255, 105, 180, 0.9);
+    }
+    100% { 
+        transform: translate(-50%, -50%) scale(1.35);
+        box-shadow: 0 0 40px rgba(255, 105, 180, 1);
+    }
+}
+
+.floating-heart {
+    position: absolute;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 24px;
+    pointer-events: none;
+    user-select: none;
+    z-index: 1;
+    opacity: 0;
+    animation-name: float;
+    animation-duration: 25s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(600px) rotate(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.7;
+    }
+    90% {
+        opacity: 0.7;
+    }
+    100% {
+        transform: translateY(-200px) rotate(720deg);
+        opacity: 0;
+    }
+}
+
+#joystick-container {
+    width: 120px;
+    height: 120px;
+    position: relative;
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
+}
+
+#heart-base {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    top: 10px;
+    left: 10px;
+}
+
+#base-heart {
+    width: 100%;
+    height: 100%;
+    fill: rgba(255, 82, 82, 0.4);
+    stroke: rgba(255, 255, 255, 0.8);
+    stroke-width: 3;
+}
+
+#joystick-handle {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    top: 60px; /* Centered relative to its 120x120 container if transform applied */
+    left: 60px; /* Centered relative to its 120x120 container if transform applied */
+    transform: translate(-50%, -50%); /* Centers the handle relative to its left/top */
+    z-index: 1;
+    pointer-events: none;
+    /* REMOVED: transition: all 0.12s cubic-bezier(0.175, 0.885, 0.32, 1.275); */ 
+    /* This makes the handle snap instantly for better feel */
+}
+
+#handle-heart {
+    width: 100%;
+    height: 100%;
+    fill: rgba(255, 255, 255, 0.98);
+}
+
+#message {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    color: white;
+    font-size: 48px;
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    opacity: 0;
+    transform: translateY(-50%);
+    transition: opacity 1.2s ease;
+    z-index: 20;
+    pointer-events: none;
+    padding: 0 60px;
+    line-height: 1.4;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.9);
+}
+
+#restart {
+    position: absolute;
+    bottom: 40px;
+    right: 40px;
+    padding: 18px 36px;
+    background: rgba(232, 67, 147, 0.95);
+    color: white;
+    border: none;
+    border-radius: 35px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 8px 25px rgba(232, 67, 147, 0.6);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 15;
+    opacity: 0;
+    pointer-events: none;
+}
+
+#restart:hover {
+    transform: translateY(-4px) scale(1.1);
+    box-shadow: 0 10px 30px rgba(232, 67, 147, 0.8);
+}
+
+/* ... (rest of your existing CSS) ... */
+
+#player {
+    position: absolute;
+    width: 30px; /* Adjust this to fit your stickman's effective size */
+    height: 30px; /* Adjust this to fit your stickman's effective size */
+    /* background: radial-gradient(circle at 30% 30%, #ffffff, #fce4ec); REMOVE this background */
+    /* border-radius: 50%; REMOVE this border-radius */
+    transform: translate(-50%, -50%); /* Centers the player relative to its left/top */
+    z-index: 3;
+    /* box-shadow: 0 6px 20px rgba(255, 105, 180, 0.8); REMOVE/adjust shadow */
+    /* border: 1px solid rgba(255, 255, 255, 0.6); REMOVE this border */
+}
+
+/* Style for the stickman SVG within the player div */
+#player .stickman-svg {
+    width: 100%; /* Make the SVG fill its parent div */
+    height: 100%; /* Make the SVG fill its parent div */
+    overflow: visible; /* Ensure limbs aren't cut off if they go slightly outside 100x100 viewBox */
+    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.8)) drop-shadow(0 0 10px rgba(255, 105, 180, 0.5)); /* Gentle glow */
+}
+
+/* Remove or comment out these if they interfere with the stickman SVG */
+/*
+#player::before {
+    content: '';
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: white;
+    border-radius: 50%;
+    top: 7px;
+    left: 7px;
+    box-shadow: 8px 0 0 white, 0 8px 0 white, 8px 8px 0 white;
+}
+*/
+
+
+#goal {
+    position: absolute;
+    width: 40px; /* Size of the love letter */
+    height: 40px; /* Size of the love letter */
+    /* background: radial-gradient(circle at center, #ff6b6b, #ee5a52); REMOVE background */
+    /* border-radius: 50%; REMOVE border-radius */
+    transform: translate(-50%, -50%); /* Centers the goal relative to its left/top */
+    z-index: 2;
+    animation: heartbeat 1.5s infinite alternate; /* Keep animation for the whole div */
+    /* box-shadow: 0 0 30px rgba(255, 105, 180, 0.9); REMOVE/adjust shadow */
+}
+
+/* Style for the love letter SVG within the goal div */
+#goal .love-letter-svg {
+    width: 100%; /* Make the SVG fill its parent div */
+    height: 100%; /* Make the SVG fill its parent div */
+    filter: drop-shadow(0 0 15px rgba(255, 105, 180, 0.9)) drop-shadow(0 0 25px rgba(255, 105, 180, 0.7)); /* Stronger glow */
+}
+
+
+/* Adjust the heartbeat animation to only affect the goal div's scale, not background/border-radius */
+@keyframes heartbeat {
+    0% { 
+        transform: translate(-50%, -50%) scale(1);
+        /* box-shadow: 0 0 30px rgba(255, 105, 180, 0.9); */ /* Managed by SVG filter now */
+    }
+    100% { 
+        transform: translate(-50%, -50%) scale(1.15); /* Slightly less dramatic scale for a less circular shape */
+        /* box-shadow: 0 0 40px rgba(255, 105, 180, 1); */ /* Managed by SVG filter now */
+    }
+}
+
+/* ... (rest of your existing CSS) ... */
+
+#player {
+    position: absolute;
+    width: 30px; /* This is the character's bounding box size in the game */
+    height: 30px; 
+    transform: translate(-50%, -50%); /* Centers the player relative to its left/top */
+    z-index: 3;
+}
+
+/* New style for the Chibi character SVG within the player div */
+#player .chibi-character-svg {
+    width: 100%; /* Make the SVG fill its parent div */
+    height: 100%; /* Make the SVG fill its parent div */
+    overflow: visible; /* Important: Allows parts of the SVG to extend beyond its viewBox if needed */
+    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.8)) drop-shadow(0 0 10px rgba(255, 105, 180, 0.5)); /* Gentle glow */
+}
+
+/* The #goal and .love-letter-svg styles remain exactly the same as before */
+#goal {
+    position: absolute;
+    width: 40px; 
+    height: 40px; 
+    transform: translate(-50%, -50%); 
+    z-index: 2;
+    animation: heartbeat 1.5s infinite alternate; 
+}
+
+#goal .love-letter-svg {
+    width: 100%; 
+    height: 100%; 
+    filter: drop-shadow(0 0 15px rgba(255, 105, 180, 0.9)) drop-shadow(0 0 25px rgba(255, 105, 180, 0.7)); 
+}
+
+/* heartbeat animation remains unchanged as well */
+@keyframes heartbeat {
+    0% { 
+        transform: translate(-50%, -50%) scale(1);
+    }
+    100% { 
+        transform: translate(-50%, -50%) scale(1.15); 
+    }
+}
+
+/* ... (rest of your existing CSS) ... */
